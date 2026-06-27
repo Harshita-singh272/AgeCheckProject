@@ -89,3 +89,18 @@ def preprocess_image(image_path):
 def estimate_age(image_path):
     preprocess_image(image_path)
     return predict_age(image_path)
+def check_threshold(age, threshold):
+    is_above_threshold = age >= threshold
+
+    decision = "PASS" if is_above_threshold else "FAIL"
+
+    confidence = min(
+        round(abs(age - threshold) / max(threshold, 1), 2),
+        1.0
+    )
+
+    return {
+        "decision": decision,
+        "is_above_threshold": is_above_threshold,
+        "confidence": confidence
+    }
