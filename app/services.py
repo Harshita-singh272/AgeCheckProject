@@ -3,6 +3,9 @@ import os
 from deepface import DeepFace
 
 def predict_age(image_path):
+    """
+    Predict age from an image using DeepFace.
+    """
     result = DeepFace.analyze(
         img_path=image_path,
         actions=["age"],
@@ -84,14 +87,5 @@ def preprocess_image(image_path):
     return image
 
 def estimate_age(image_path):
-    """
-    Complete age estimation pipeline.
-    """
-
-    # Validate and preprocess image
-    processed_image = preprocess_image(image_path)
-
-    # Predict age
-    age = predict_age(image_path)
-
-    return age
+    preprocess_image(image_path)
+    return predict_age(image_path)
