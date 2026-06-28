@@ -28,7 +28,7 @@ threshold = st.number_input(
 check_button = st.button("Check Age")
 
 st.header("Result")
-
+result_placeholder = st.empty()
 if check_button:
 
     if uploaded_file is None:
@@ -64,9 +64,9 @@ if check_button:
             st.subheader("Verification Result")
 
             if decision == "PASS":
-                st.success("✅ PASS")
+                result_placeholder.success("✅ PASS")
             else:
-                st.error("❌ FAIL")
+                result_placeholder.error("❌ FAIL")
 
             st.metric(
                 label="Confidence",

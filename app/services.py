@@ -86,9 +86,9 @@ def preprocess_image(image_path):
 
     return image
 
-def estimate_age(image_path):
-    preprocess_image(image_path)
-    return predict_age(image_path)
+```def estimate_age(image_path):
+    processed_image = preprocess_image(image_path)
+    return predict_age(processed_image)```
 
 def check_threshold(age, threshold):
 
