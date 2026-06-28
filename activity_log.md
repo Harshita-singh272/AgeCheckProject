@@ -83,3 +83,73 @@ Test cases included:
 ## Status
 
 Day 4 objectives completed successfully.
+
+# Day 5 Activity Log
+
+Date: 28 June 2026
+
+## Objectives
+
+* Develop the Streamlit frontend interface for the Age Verification System.
+* Integrate the Streamlit application with the FastAPI backend.
+* Validate end-to-end communication between frontend and backend.
+* Improve result presentation and user interaction.
+
+## Tasks Completed
+
+### 1. Streamlit User Interface Development
+
+* Created the main Streamlit application interface.
+* Added image upload functionality supporting JPG, JPEG, and PNG formats.
+* Implemented image preview after upload.
+* Added age threshold input using a numeric input field.
+* Organized the interface into:
+
+  * Upload Image section
+  * Age Threshold section
+  * Result section
+
+### 2. Backend Integration
+
+* Connected Streamlit frontend to FastAPI backend using HTTP requests.
+* Configured communication with the `/check_age` endpoint.
+* Implemented image and threshold submission from the frontend.
+* Processed API responses returned by the backend.
+
+### 3. Response Handling
+
+* Extracted decision and confidence values from API responses.
+* Displayed verification outcomes within the Streamlit interface.
+* Implemented PASS and FAIL result indicators.
+* Added confidence score visualization.
+
+### 4. Input Validation
+
+* Verified image upload before sending requests.
+* Displayed warning messages when no image was selected.
+* Confirmed threshold input constraints using Streamlit validation.
+
+### 5. UI Improvements
+
+* Added dedicated result placeholder using `st.empty()`.
+* Updated PASS and FAIL messages to use the placeholder component.
+* Improved organization of result presentation.
+
+### 6. End-to-End Testing
+
+* Launched Streamlit frontend locally.
+* Verified successful image upload and preview.
+* Tested API communication with FastAPI backend.
+* Confirmed correct display of verification decisions and confidence values.
+
+## Observations
+
+* Streamlit and FastAPI integration functioned successfully.
+* User inputs were transmitted correctly to the backend.
+* API responses were displayed accurately in the frontend.
+* Result placeholder improved UI consistency and user experience.
+
+## Status
+
+Day 5 objectives completed successfully.
+
