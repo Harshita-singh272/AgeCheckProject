@@ -1,6 +1,5 @@
 from app.services import estimate_age, check_threshold
 
-# Integration Test
 image_path = "data/test_images/image.png"
 
 age = estimate_age(image_path)
@@ -14,9 +13,6 @@ assert "is_above_threshold" in result
 assert "confidence" in result
 
 print("Integration Test Passed")
-
-
-# Unit Tests
 
 result = check_threshold(25, 18)
 assert result["decision"] == "PASS"
