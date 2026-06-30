@@ -1,6 +1,7 @@
 import streamlit as st
 import requests
 
+
 API_URL = "http://127.0.0.1:8000/check_age"
 
 st.title("Age Verification System")
