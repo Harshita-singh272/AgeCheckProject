@@ -452,7 +452,35 @@ with centre:
 
 with right:
 
-
     container = st.container(border=True)
+
     with container:
-        st.subheader("Admin Access")        
+        st.subheader("🔒 Admin Access")
+
+        st.write("Enter Passkey")
+
+        passkey = st.text_input(
+            "",
+            type="password",
+            placeholder="Enter admin passkey",
+            label_visibility="collapsed"
+        )
+
+        unlock = st.button(
+            "🔓 Unlock Admin",
+            use_container_width=True
+        )
+        container = st.container(border=True)
+
+with container:
+    st.subheader("🔒 Admin Panel (Locked)")
+
+    st.write("Unlock the admin panel to view:")
+
+    st.markdown("""
+- Estimated age (raw model output)
+- Confidence calculation details
+- System diagnostics
+- Activity logs
+- API & model information
+""")
