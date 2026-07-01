@@ -1,0 +1,2 @@
+{"event_id": "evt_2b7f7da1", "timestamp": "2026-07-01T11:45:13.861069", "threshold": 18, "predicted_age": 44, "decision": "PASS", "confidence": 100, "image_filename": "WhatsApp Image 2026-07-01 at 11.44.38.jpeg"}
+{"event_id": "evt_74e1d24b", "timestamp": "2026-07-01T11:58:33.567754", "threshold": 18, "predicted_age": 44, "decision": "PASS", "confidence": 100, "latency_ms": 3701.62, "model_name": "DeepFace", "image_filename": "WhatsApp Image 2026-07-01 at 11.58.06.jpeg"}
