@@ -1,6 +1,11 @@
 import streamlit as st
 from PIL import Image
+import requests
 
+API_URL = "http://127.0.0.1:8000/check_age"
+
+uploaded_file=('data/test_images/profile.png')
+threshold= 18
 st.set_page_config(layout="wide")
 
 st.markdown("""
@@ -293,7 +298,7 @@ with left:
         )
         threshold = st.radio(
             "💡 Choose the minimum age that a user must meet to pass age verification.",
-            ["18+ (Default)","21+","25+","60+"]
+            [18,21,25,50,60]
         )
 
         verification = st.button("🛡️ VERIFY AGE" , use_container_width=True)
@@ -325,6 +330,7 @@ with centre:
     container = st.container(border=True)
     with container:
         st.subheader("User Panel")
+        st.divider()
         if verification == False:
             st.markdown(
             '<div class="uploaded">Uploaded Image</div>',
@@ -336,8 +342,6 @@ with centre:
                 container = st.container(border=True)
 
                 with container:
-                        # col1, col2, col3 = st.columns([0.1,2, 0.2])
-                        # with col2:
                         st.image('data/test_images/profile.png' , width = 250)
                         st.markdown(
                             '<div class=caption>No Image Uploaded</div>',unsafe_allow_html=True
@@ -462,7 +466,185 @@ with centre:
                 )     
             st.info("ⓘ &nbsp; Only a boolean result is shown in this view to protect user privacy.")  
         else: 
-            st.write("hello")    
+            st.markdown(
+            '<div class="uploaded">Uploaded Image</div>',
+            unsafe_allow_html=True
+            ) 
+            col1, col2, col3 = st.columns([2,2, 2])
+            with col2:
+                container = st.container(border=True)
+                with container:
+                    st.image(uploaded_file , width=300)
+
+            st.markdown(
+            """<div class="uploaded">Verification Result</div>""",
+            unsafe_allow_html=True
+            )
+            files = {
+                "image": (
+                    uploaded_file.name,
+                    uploaded_file,
+                    uploaded_file.type
+                )
+            }
+
+            data = {
+                "threshold": str(threshold)
+            }
+
+            response = requests.post(
+                API_URL,
+                files=files,
+                data=data
+            )
+            result = response.json()
+
+            if result["decision"]=="PASS":
+                st.markdown(f"""
+                    <div class="decision-card pass">
+                        <div style="color:#16A34A;font-size:38px; font-weight:600;">✅  PASS</div>
+                        <div style="font-size:20px; margin-bottom: .3rem; margin-left:2rem;margin-topm:.7rem;">
+                            &nbsp;&nbsp;&nbsp;&nbsp; User is above Threshold ({threshold})+ <br>
+                        </div>
+                    </div>
+                    """, unsafe_allow_html=True)
+
+            elif result["decision"]=="FAIL":
+                st.markdown(f"""
+                    <div class="decision-card fail">
+                        <div style="color:#DC2626;font-size:38px; font-weight:600;">❌  FAIL</div>
+                        <div style="font-size:20px; margin-bottom: .3rem; margin-left:2rem;margin-topm:.7rem;">
+                            &nbsp;&nbsp;&nbsp;&nbsp; User is below Threshold ({threshold})+ <br>
+                        </div>
+                    </div>
+                    """, unsafe_allow_html=True)    
+                                          
+            else:
+                st.markdown(f"""
+                    <div class="decision-card inconclusive">
+                        <div style="color:#F59E0B;font-size:38px; font-weight:600;">⚠️ INCONCLUSIVE</div>
+                        <div style="font-size:20px; margin-bottom: .3rem; margin-left:2rem;margin-topm:.7rem;">
+                            &nbsp;&nbsp;&nbsp;&nbsp; Prediction is close to threshold ({threshold})+ or confidence is low <br>
+                        </div>
+                    </div>
+                    """, unsafe_allow_html=True)    
+            st.markdown(
+            """<div class="uploaded">Confidence Level</div>""",
+            unsafe_allow_html=True
+            )    
+            col1, col2 = st.columns([1, 3])
+            with col1:
+                st.markdown(f"""
+                <div style="
+                    font-size:40px;
+                    font-weight:700;
+                    color:#0f172a;
+                ">
+                    {result["confidence"]}
+                </div>
+                """, unsafe_allow_html=True)
+
+            with col2:
+                if 0 <= result["confidence"] <= 59:
+
+                    st.markdown("""
+                    <div style="
+                        text-align:right;
+                        margin-top:15px;
+                        color:#64748b;
+                        font-size:15px;
+                    ">
+                        Low Confidence
+                    </div>
+                    """, unsafe_allow_html=True)
+                elif 60 <= result["confidence"] <= 79:
+                    st.markdown("""
+                    <div style="
+                        text-align:right;
+                        margin-top:15px;
+                        color:#64748b;
+                        font-size:15px;
+                    ">
+                        Medium Confidence
+                    </div>
+                    """, unsafe_allow_html=True)
+                else:
+                    st.markdown("""
+                    <div style="
+                        text-align:right;
+                        margin-top:15px;
+                        color:#64748b;
+                        font-size:15px;
+                    ">
+                        High Confidence
+                    </div>
+                    """, unsafe_allow_html=True)        
+            confidence = float(result["confidence"])
+
+            if confidence <= 59:
+                bar_color = "#EF4444"    
+            elif confidence <= 79:
+                bar_color = "#EBD122" 
+            else:
+                bar_color = "#16A34A" 
+
+            st.markdown(f"""
+            <div style="
+                width:100%;
+                height:14px;
+                background:#E5E7EB;
+                border-radius:10px;
+                overflow:hidden;
+                margin-top:8px;
+            ">
+                <div style="
+                    width:{confidence}%;
+                    height:100%;
+                    background:{bar_color};
+                    border-radius:10px;
+                    transition:width .5s ease;
+                ">
+                </div>
+            </div>
+            """, unsafe_allow_html=True)      
+
+            scale1, scale2, scale3, scale4, scale5 = st.columns(5)
+            with scale1:
+                st.markdown("<div style='text-align:left;'>0%</div>", unsafe_allow_html=True)
+
+            with scale2:
+                st.markdown("<div style='text-align:center;'>25%</div>", unsafe_allow_html=True)
+
+            with scale3:
+                st.markdown("<div style='text-align:center;'>50%</div>", unsafe_allow_html=True)
+
+            with scale4:
+                st.markdown("<div style='text-align:center;'>75%</div>", unsafe_allow_html=True)
+
+            with scale5:
+                st.markdown("<div style='text-align:right;'>100%</div>", unsafe_allow_html=True)
+
+            legend1, legend2, legend3 = st.columns(3)
+
+            with legend1:
+                st.markdown(
+                    "<div style='text-align:center;color:#475569;margin-bottom:1rem; margin-top:.5rem;'>🔴 0–59% &nbsp; Low</div>",
+                    unsafe_allow_html=True
+                )
+
+            with legend2:
+                st.markdown(
+                    "<div style='text-align:center;color:#475569;margin-bottom:1rem; margin-top:.5rem;'>🟡 60–79% &nbsp; Medium</div>",
+                    unsafe_allow_html=True
+                )
+
+            with legend3:
+                st.markdown(
+                    "<div style='text-align:center;color:#475569;margin-bottom:1rem; margin-top:.5rem;'>🟢 80–100% &nbsp; High</div>",
+                    unsafe_allow_html=True
+                )     
+            st.info("ⓘ &nbsp; Only a boolean result is shown in this view to protect user privacy.")     
+
     Decision = st.container(border=  True)
 
     with Decision:
