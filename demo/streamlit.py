@@ -207,6 +207,62 @@ hr{
     font-size:15px;
     margin-top:5px;
     color:#4B5563;
+}
+            /* ---------- RIGHT PANEL ---------- */
+
+.admin-card{
+    background:#ffffff;
+    border:1px solid #d9dee8;
+    border-radius:12px;
+    padding:18px;
+    margin-bottom:18px;
+    box-shadow:0 1px 3px rgba(0,0,0,.08);
+}
+
+.admin-title{
+    font-size:18px;
+    font-weight:700;
+    color:#4F46E5;
+    margin-bottom:10px;
+}
+
+.admin-subtitle{
+    color:#4B5563;
+    font-size:15px;
+    margin-bottom:15px;
+}
+
+.locked-card{
+    background:#FFF8F8;
+    border:1px dashed #FCA5A5;
+    border-radius:12px;
+    padding:18px;
+    margin-top:18px;
+}
+
+.locked-title{
+    color:#7C2D12;
+    font-size:18px;
+    font-weight:700;
+    margin-bottom:10px;
+}
+
+.lock-item{
+    padding:7px 0;
+    font-size:15px;
+    color:#374151;
+}
+
+.lock-footer{
+    margin-top:18px;
+    padding:12px;
+    border-radius:10px;
+    background:#FEF2F2;
+    border:1px solid #FECACA;
+    text-align:center;
+    color:#B91C1C;
+    font-size:14px;
+    font-weight:600;
 }           
 </style>
 """, unsafe_allow_html=True)
@@ -630,11 +686,64 @@ with centre:
                 </div>
             </div>
             """, unsafe_allow_html=True)
-
-
 with right:
 
+    # ---------------- Admin Access ---------------- #
 
-    container = st.container(border=True)
-    with container:
-        st.subheader("Admin Access")        
+    admin_card = st.container(border=True)
+
+    with admin_card:
+
+        st.markdown(
+            '<div class="admin-title">🔒 Admin Access</div>',
+            unsafe_allow_html=True
+        )
+
+        st.markdown('<div class="admin-subtitle">Enter passkey to unlock admin diagnostics.</div>',
+            unsafe_allow_html=True
+        )
+
+        passkey = st.text_input(
+            "Admin Passkey",
+            type="password",
+            placeholder="Enter passkey",
+            label_visibility="collapsed"
+        )
+
+        unlock = st.button(
+            "🔓 Unlock Admin",
+            use_container_width=True
+        )
+
+        st.caption("🔒 Admin access is for demo and learning purposes only.")
+
+    # ---------------- Locked Panel ---------------- #
+
+    locked = st.container(border=True)
+
+    with locked:
+
+        st.markdown(
+            """
+            <div class="locked-title">
+            🔒 Admin Panel (Locked)
+            </div>
+
+            <div class="lock-item">📊 Estimated Age (Raw Prediction)</div>
+
+            <div class="lock-item">📈 Confidence Calculation</div>
+
+            <div class="lock-item">🖥️ Model Diagnostics</div>
+
+            <div class="lock-item">📜 Activity Logs</div>
+
+            <div class="lock-item">⚙️ API & Model Information</div>
+
+            <div class="lock-footer">
+                Unlock to access sensitive administrator information
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+
