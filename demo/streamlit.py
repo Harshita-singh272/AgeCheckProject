@@ -96,16 +96,12 @@ st.markdown("""
     padding-right: .5rem;
 }
             
-h3{
-    color: #003049 !important;
-}
-            
 h1{
     color: white !important;
     background-color: #031d44;  
     font-size: 35px !important;  
     padding-left: 5px !important;
-    padding-top: 10px !important;
+    padding-top: 20px !important;
     margin-bottom: 0.2rem !important; 
     line-height:1.2;    
 } 
@@ -263,21 +259,66 @@ hr{
     color:#B91C1C;
     font-size:14px;
     font-weight:600;
-}           
+}
+
+.user-header{
+    font-size:40px !important;
+    font-weight:600;
+    color:#023e8a;
+    margin-right: -.6rem;
+     
+}   
+
+.user-description{
+    padding-top: 5rem !important; 
+    font-size:25px !important;
+    font-weight:600;
+    color:#023e8a;    
+    
+}   
+               
+.configuration-header{
+    color: #003049 !important;
+    font-size: 40px !important;
+    font-weight: 600;
+}       
+            
+.divider-user hr{
+    border: 2px soild #023e8a ;
+    border-radius: 10px;
+    height:.4rem !important;
+    background: #023e8a ;  
+    margin-top: 1rem;
+    margin-bottom: .5rem;
+}
+            
+.divider-config hr{
+    border: 2px soild #003049 ;
+    border-radius: 10px;
+    height:.2rem !important;
+    background: #003049 ;  
+    margin-top: 1rem;
+    margin-bottom: .5rem;        
+}
+            
 </style>
 """, unsafe_allow_html=True)
-st.title("Age Check with Boolean Privacy Demo")
+st.title("🔔 Age Check with Boolean Privacy Demo")
 left , centre , right = st.columns([5,7,4])
 
 with left:
     container = st.container(border=True)
 
     with container:
-        st.subheader("⚙ Configuration")
+        st.markdown(
+            '<div class="configuration-header">⚙ Configuration</div>'
+        ,unsafe_allow_html=True)
         st.markdown(
             '<div class="left_description">[Configure age verification settings]</div>',unsafe_allow_html=True
         )
-        st.divider()
+        st.markdown(
+            '<div class="divider-config"><hr></div>'
+        ,unsafe_allow_html=True)
         st.markdown(
             '<div class="upload-title">1. Upload Image</div>',
             unsafe_allow_html=True
@@ -329,8 +370,22 @@ with left:
 with centre:
     container = st.container(border=True)
     with container:
-        st.subheader("User Panel")
-        st.divider()
+        st.markdown(f"""
+            <div style="display:flex;align-items:center;gap:12px;">
+                <span style="font-size:32px;color:#023e8a;">
+                    🪪
+                </span>
+                <span style="font-size:40px;font-weight:700;color:#023e8a;white-space:nowrap;">
+                    User Panel
+                </span>
+                <span style="font-size:20px;color:#023e8a;margin-top:12px;white-space:nowrap;">
+                    (Normal View)
+                </span>
+            </div>
+            """, unsafe_allow_html=True)
+        st.markdown(
+            '<div class="divider-user"><hr></div>'
+        ,unsafe_allow_html=True)
         if verification == False:
             st.markdown(
             '<div class="uploaded">Uploaded Image</div>',
