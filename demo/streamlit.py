@@ -91,21 +91,19 @@ st.markdown("""
     font-weight: 500;
 }        
 .block-container {
-    padding-top: 2rem;
-    padding-left: .5rem;
-    padding-right: .5rem;
+    padding-top: 0rem !important;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    padding-bottom: 0rem;
 }
-            
-h1{
-    color: white !important;
-    background-color: #031d44;  
-    font-size: 35px !important;  
-    padding-left: 5px !important;
-    padding-top: 20px !important;
-    margin-bottom: 0.2rem !important; 
-    line-height:1.2;    
-} 
-            
+div[data-testid="stHeading"]{
+    margin-top:0 !important;
+    padding-top:0 !important;
+}
+
+div[data-testid="stHeading"] h1{
+    margin:0 !important;
+}                        
 hr{
     margin-top: 0 !important;
     margin-bottom: 05.rem !important;
@@ -303,7 +301,18 @@ hr{
             
 </style>
 """, unsafe_allow_html=True)
-st.title("🔔 Age Check with Boolean Privacy Demo")
+st.markdown("""
+<h1 style="
+background:#031D44;
+color:white;
+padding:18px 20px;
+margin:0;
+border-radius:0;
+font-size:38px;
+font-weight:700;">
+🔔 Age Check with Boolean Privacy Demo
+</h1>
+""", unsafe_allow_html=True)
 left , centre , right = st.columns([5,7,4])
 
 with left:
