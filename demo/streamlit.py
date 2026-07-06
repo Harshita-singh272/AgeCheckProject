@@ -3,6 +3,8 @@ from PIL import Image
 import requests
 
 st.set_page_config(layout="wide")
+if "admin_mode" not in st.session_state:
+    st.session_state.admin_mode = False
 
 API_URL = "http://127.0.0.1:8000/check_age"
 
@@ -767,7 +769,8 @@ with right:
             unsafe_allow_html=True
         )
 
-        st.markdown('<div class="admin-subtitle">Enter passkey to unlock admin diagnostics.</div>',
+        st.markdown(
+            '<div class="admin-subtitle">Enter passkey to unlock admin diagnostics.</div>',
             unsafe_allow_html=True
         )
 
@@ -783,8 +786,16 @@ with right:
             use_container_width=True
         )
 
-        st.caption("🔒 Admin access is for demo and learning purposes only.")
+        ADMIN_PASSKEY = "admin123"
 
+        if unlock:
+            if passkey == ADMIN_PASSKEY:
+                st.session_state.admin_mode = True
+                st.success("✅ Admin access granted.")
+            else:
+                st.error("❌ Incorrect passkey.")
+
+        st.caption("🔒 Admin access is for demo and learning purposes only.")
     # ---------------- Locked Panel ---------------- #
 
     locked = st.container(border=True)
