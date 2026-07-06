@@ -2,11 +2,12 @@ import streamlit as st
 from PIL import Image
 import requests
 
+st.set_page_config(layout="wide")
+
 API_URL = "http://127.0.0.1:8000/check_age"
 
-uploaded_file=('data/test_images/profile.png')
-threshold= 18
-st.set_page_config(layout="wide")
+uploaded_file = "data/test_images/profile.png"
+threshold = 18
 
 st.markdown("""
 <style>
@@ -91,23 +92,10 @@ st.markdown("""
     font-weight: 500;
 }        
 .block-container {
-    padding-top: 0rem !important;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    padding-bottom: 0rem;
+    padding: 1rem 0.5rem 0.5rem 0.5rem !important;
 }
-div[data-testid="stHeading"]{
-    margin-top:0 !important;
-    padding-top:0 !important;
-}
-
-div[data-testid="stHeading"] h1{
-    margin:0 !important;
-}                        
-hr{
-    margin-top: 0 !important;
-    margin-bottom: 05.rem !important;
-}
+                       
+margin-bottom: 0.5rem !important;
 
 .upload-title {
     font-size: 20px;
@@ -119,7 +107,7 @@ hr{
     color: #003049 !important;
 } 
 
-.privacy-box {
+.privacy-box { 
     margin-top: -10px !important;
     margin-bottom: .7rem;
     padding: 12px;
@@ -298,20 +286,36 @@ hr{
     margin-top: 1rem;
     margin-bottom: .5rem;        
 }
-            
+
 </style>
 """, unsafe_allow_html=True)
+
 st.markdown("""
-<h1 style="
-background:#031D44;
-color:white;
-padding:18px 20px;
-margin:0;
-border-radius:0;
-font-size:38px;
-font-weight:700;">
+<style>
+.custom-header{
+    background:#031D44;
+    color:white;
+    padding:13px 18px;
+    border-radius:8px;
+    margin-top: 12px;
+    margin-bottom:12px;
+}
+
+.header-text{
+    font-size:34px;
+    font-weight:700;
+    color:white;
+    line-height:1.1;
+}
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+<div class="custom-header">
+<div class="header-text">
 🔔 Age Check with Boolean Privacy Demo
-</h1>
+</div>
+</div>
 """, unsafe_allow_html=True)
 left , centre , right = st.columns([5,7,4])
 
