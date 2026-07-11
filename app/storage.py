@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+import pandas as pd
 
 LOG_FILE = Path("data/activity_log.jsonl")
 
@@ -87,6 +88,35 @@ def get_heatmap_data():
             heatmap[threshold][decision] += 1
 
     return heatmap
+
+def get_bargraph_dataframe():
+    """
+    Creates a DataFrame showing number of verifications
+    for each threshold.
+    """
+
+    logs = load_verification_logs()
+
+    if not logs:
+        return pd.DataFrame()
+
+    rows = []
+
+    for log in logs:
+        rows.append({
+            "Threshold": f"{log['threshold']}+",
+            "Count": 1
+        })
+
+    df = pd.DataFrame(rows)
+
+    bar_df = (
+        df.groupby("Threshold")["Count"]
+        .sum()
+        .reset_index()
+    )
+    return bar_df
+
 if __name__ == "__main__":
 
     print("\nStatistics:")

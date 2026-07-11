@@ -1,7 +1,8 @@
-from fastapi import FastAPI, UploadFile, File, Form
-from app.schemas import HealthResponse, AgeCheckResponse
+from fastapi import FastAPI, UploadFile, File, Form, HTTPException
+from app.schemas import HealthResponse, AgeCheckResponse, AdminLoginRequest, AdminLoginResponse, AdminAgeResponse
 from app.services import estimate_age, check_threshold
 from app.storage import save_verification_log
+from app.admin import verify
 
 import tempfile
 import os
@@ -65,3 +66,78 @@ async def check_age(
     finally:
         if os.path.exists(temp_path):
             os.remove(temp_path)
+
+@app.post(
+    "/admin/login",
+    response_model=AdminLoginResponse
+)
+def admin_login(request: AdminLoginRequest):
+    if verify(request.passkey):
+
+        return {
+            "authenticated": True,
+            "message": "Admin access granted"
+        }
+    
+    return {
+        "authenticated": False,
+        "message": "Invalid passkey"
+    }
+
+@app.post("/admin/check_age", response_model=AdminAgeResponse)
+async def admin_check_age(
+    passkey: str = Form(...),
+    image: UploadFile = File(...),
+    threshold: int = Form(...)
+):
+    if not verify(passkey):
+
+        raise HTTPException( 
+        status_code = 401,
+        detail = "Invalid Admin Passkey"
+        )
+    
+    start_time = time.perf_counter()
+
+    with tempfile.NamedTemporaryFile(
+        delete=False,
+        suffix=".jpg"
+    ) as temp_file:
+        temp_file.write(await image.read())
+        temp_path = temp_file.name
+
+    try:
+
+        age = estimate_age(temp_path)
+
+        result = check_threshold(age, threshold)
+
+        latency_ms = round(
+            (time.perf_counter() - start_time) * 1000,
+            2
+        )
+
+        return {
+
+        "estimated_age": round(age,2),
+
+        "threshold": threshold,
+
+        "difference": round(age-threshold,2),
+
+        "decision": result["decision"],
+
+        "confidence": result["confidence"],
+
+        "latency_ms": latency_ms,
+
+        "model_name":"DeepFace"
+
+        }
+    finally:
+
+        if os.path.exists(temp_path):
+            os.remove(temp_path)
+            
+          
+
