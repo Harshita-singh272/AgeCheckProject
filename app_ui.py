@@ -50,8 +50,9 @@ def verify_user():
         files=files,
         data=data
     )
-    st.session_state.verification_result = response.json()
-
+    result = response.json()
+    print(result)   # Prints in the terminal
+    st.session_state.verification_result = result
 def show_left_panel():
     container = st.container(border=True)
 
@@ -96,6 +97,8 @@ def show_left_panel():
 
             else:
                 verify_user()
+                
+                st.write(st.session_state.verification_result)
                 st.session_state.verification = True
         st.markdown(
             '</div>',
@@ -122,7 +125,126 @@ def show_left_panel():
         unsafe_allow_html=True)
 
 def show_admin_panel():
-    "hello"
+
+    container = st.container(border=True)
+
+    with container:
+
+        st.markdown("""
+        <div style="display:flex;align-items:center;gap:12px;">
+            <span style="font-size:30px;">🔓</span>
+            <span style="font-size:38px;font-weight:700;color:#15803D;">
+                ADMIN PANEL
+            </span>
+            <span style="font-size:20px;color:#15803D;margin-top:8px;">
+                (UNLOCKED)
+            </span>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown(
+            "<div style='color:#64748B;margin-bottom:15px;'>Diagnostics & Internal View (For learning purposes only)</div>",
+            unsafe_allow_html=True
+        )
+
+        st.divider()
+
+        result = st.session_state.verification_result
+
+        if result is None:
+         st.info("No verification data available. Run a verification first.")
+         return
+
+
+        col1, col2, col3, col4 = st.columns(4)
+
+        with col1:
+         st.metric(
+            "Estimated Age",
+            "N/A"
+        )
+
+        with col2:
+         st.metric(
+            "Threshold",
+            f"{st.session_state.threshold}+"
+        )
+
+        with col3:
+         st.metric(
+           "Decision",
+            result["decision"]
+        )
+
+        with col4:
+         st.metric(
+            "Difference",
+            "N/A"
+        )
+
+
+        st.divider()
+
+
+        col5, col6 = st.columns(2)
+        
+        with col5:
+         st.markdown("### 📈 Confidence Score")
+
+         confidence = result["confidence"]
+
+         st.write(f"{confidence}%")
+
+         st.progress(confidence / 100)
+        with col6:
+          st.markdown(
+            """
+            ### 🤖 Model & Inference Info
+            """
+         )
+
+          st.info(
+            """
+            Model: DeepFace Age Estimation
+        
+            Inference Status: Completed
+        
+            Output Type: Age Verification
+            """
+        )
+          st.divider()
+
+        card1, card2, card3 = st.columns(3)
+
+        with card1:
+            st.markdown("### 🤖 Model")
+            st.info("DeepFace Age Estimation")
+
+        with card2:
+            st.markdown("### 📋 Request")
+            st.info("Age Verification")
+
+        with card3:
+            st.markdown("### 🔐 Privacy")
+            st.info("Protected Processing")
+
+
+        st.divider()
+
+
+        st.markdown(
+           "### 📋 Request Information"
+        )
+
+        st.info(
+          """
+          Request Status: Completed
+    
+          Verification Type: Age Threshold Check
+    
+          Privacy Mode: Enabled
+          """
+        )
 
 def show_user_panel():
     container = st.container(border=True)
