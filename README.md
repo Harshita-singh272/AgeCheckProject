@@ -66,7 +66,6 @@ AgeCheckProject/
 ├── app_ui.py
 ├── requirements.txt
 ├── README.md
-├──structure.txt
 └── report.md
 ```
 
