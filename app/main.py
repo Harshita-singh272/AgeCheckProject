@@ -23,6 +23,11 @@ def health():
     return {"status": "ok"}
 
 
+@app.get("/version")
+def version():
+    return {"module": "age_check", "version": "0.1.0"}
+
+
 @app.post("/check_age", response_model=AgeCheckResponse)
 async def check_age(
     image: UploadFile = File(...),
@@ -67,6 +72,7 @@ async def check_age(
         if os.path.exists(temp_path):
             os.remove(temp_path)
 
+
 @app.post(
     "/admin/login",
     response_model=AdminLoginResponse
@@ -83,6 +89,7 @@ def admin_login(request: AdminLoginRequest):
         "authenticated": False,
         "message": "Invalid passkey"
     }
+
 
 @app.post("/admin/check_age", response_model=AdminAgeResponse)
 async def admin_check_age(

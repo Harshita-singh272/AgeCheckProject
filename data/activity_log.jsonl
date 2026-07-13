@@ -5,3 +5,4 @@
 {"event_id": "evt_e6a5054d", "timestamp": "2026-07-11T14:04:43.583455", "threshold": 50, "predicted_age": 33, "decision": "FAIL", "confidence": 100, "latency_ms": 408.12, "model_name": "DeepFace", "image_filename": "images (1).jpg"}
 {"event_id": "evt_ed6af09b", "timestamp": "2026-07-11T14:53:58.209208", "threshold": 25, "predicted_age": 23, "decision": "INCONCLUSIVE", "confidence": 60, "latency_ms": 4740.08, "model_name": "DeepFace", "image_filename": "images.jpg"}
 {"event_id": "evt_d7d2b303", "timestamp": "2026-07-11T15:56:39.070211", "threshold": 50, "predicted_age": 22, "decision": "FAIL", "confidence": 100, "latency_ms": 6289.0, "model_name": "DeepFace", "image_filename": "image.png"}
+{"event_id": "evt_73050074", "timestamp": "2026-07-12T23:41:04.978465", "threshold": 18, "predicted_age": 29, "decision": "PASS", "confidence": 100, "latency_ms": 6931.43, "model_name": "DeepFace", "image_filename": "1..jpg"}

@@ -1,179 +1,179 @@
-# Day 3 Report
+# Project 5 – Age Check with Boolean Privacy Demo
+## Internship Report
 
-## Objective
+**Team:** Harshita Singh, Ayesha Riyaz
+**Date:** July 13, 2026
 
-Integrate a pretrained age estimation model and create an image preprocessing pipeline.
+---
 
-## Work Completed
+### 1. What We Built
 
-### Model Integration
+We built a privacy-preserving age verification system using FastAPI, DeepFace, and
+Streamlit. A user uploads an image and selects an age threshold (18+, 21+, or 60+).
+DeepFace handles face detection and age estimation internally, and the predicted
+age is compared against the threshold. Normal users receive only a boolean decision
+(PASS/FAIL/INCONCLUSIVE) with a confidence score — never the raw predicted age.
 
-* DeepFace age estimation model integrated.
-* Age prediction functionality implemented using `predict_age()`.
+The system has two access levels:
+- **User flow:** public, boolean-only results via `/check_age`
+- **Admin flow:** passkey-protected, via `/admin/login` and `/admin/check_age`,
+  revealing estimated age, confidence, threshold difference, and diagnostics for
+  internal model evaluation only
 
-### Image Preprocessing
+The admin passkey is loaded from a `.env` file (`python-dotenv`) and never hardcoded.
 
-* Image loading implemented.
-* Image validation implemented.
-* RGB conversion implemented.
-* Image resizing implemented.
-* Image normalization implemented.
+### 2. Approach & Implementation
 
-### Testing Results
-
-| Test Case                    | Result |
-| ---------------------------- | ------ |
-| Valid PNG Image              | PASS   |
-| Valid JPG Image              | PASS   |
-| Image Information Extraction | PASS   |
-| Image Resizing               | PASS   |
-| Image Normalization          | PASS   |
-| Missing File Handling        | PASS   |
-| Age Prediction               | PASS   |
-| End-to-End Integration       | PASS   |
-
-## Conclusion
-
-The age estimation pipeline successfully processes an input image, performs preprocessing, and returns a predicted age. The project is ready for Day 4 FastAPI endpoint integration.
-
-
-# Day 4 Report – Privacy-Preserving Age Verification
-
-## Overview
-
-The focus of Day 4 was implementing and validating the threshold-based age verification workflow. The goal was to ensure that the system provides only a pass/fail result instead of exposing the estimated age directly.
-
-## Work Performed
-
-### Threshold Validation Logic
-
-The `check_threshold()` function was reviewed and tested. The function accepts:
-
-* Predicted age from DeepFace
-* User-provided threshold value
-
-The function evaluates whether the predicted age meets or exceeds the threshold and returns:
-
-* Decision (`PASS` or `FAIL`)
-* Boolean status (`is_above_threshold`)
-* Confidence score
-
-### Testing
-
-Several test scenarios were executed using local image datasets.
-
-Example workflow:
-
-1. Image supplied to `estimate_age()`
-2. DeepFace predicts age
-3. Predicted age passed to `check_threshold()`
-4. Decision generated based on threshold comparison
-
-### API Integration Validation
-
-The FastAPI endpoint `/check_age` was tested using Swagger UI.
-
-Workflow verified:
-
-* Image upload
-* Temporary file creation
-* DeepFace age prediction
-* Threshold comparison
-* Response generation
-
-### Results
-
-The API successfully:
-
-* Accepted image uploads.
-* Generated age estimates.
-* Compared estimates against user-defined thresholds.
-* Returned privacy-preserving verification results.
-
-The system did not expose raw age predictions through the API response, satisfying the project privacy requirement.
-
-## Conclusion
-
-Day 4 testing confirmed that the threshold verification logic and API integration function correctly. The privacy-preserving workflow is operational and ready for further enhancements in subsequent development phases.
-
-
-# Day 5 Report – Privacy-Preserving Age Verification
-
-## Overview
-
-The focus of Day 5 was developing the user-facing interface and integrating it with the backend age verification service. The objective was to enable users to upload an image, specify an age threshold, and receive a privacy-preserving verification result through an interactive web application.
-
-## Work Performed
-
-### Streamlit Frontend Development
-
-A Streamlit-based user interface was developed to provide an accessible front end for the age verification system.
-
-The interface includes:
-
-* Image upload functionality supporting JPG, JPEG, and PNG formats.
-* Image preview before submission.
-* User-defined age threshold input.
-* Verification request submission through a dedicated button.
-* Result display section for verification outcomes.
-
-### Backend Integration
-
-The Streamlit application was connected to the FastAPI backend through HTTP requests.
-
-The frontend sends:
-
-* Uploaded image
-* User-defined threshold value
-
-to the `/check_age` API endpoint and receives the verification response generated by the backend.
-
-### Response Processing
-
-The API response is processed within the Streamlit application and displayed to the user.
-
-Displayed information includes:
-
-* Verification decision (`PASS` or `FAIL`)
-* Confidence score returned by the backend
-
-A dedicated result placeholder was implemented to improve result presentation and provide a cleaner user experience.
-
-### Validation and Error Handling
-
-Basic validation mechanisms were implemented to improve reliability.
-
-These include:
-
-* Verification that an image has been uploaded before submission.
-* Restriction of threshold values to valid numeric ranges.
-* Error handling for API communication failures.
-
-### End-to-End Testing
-
-The complete workflow was tested to verify successful communication between the frontend and backend.
-
-Verified workflow:
-
-1. User uploads an image.
-2. User specifies an age threshold.
-3. Streamlit sends the request to FastAPI.
-4. FastAPI processes the image and performs age verification.
-5. Verification result is returned.
-6. Streamlit displays the decision and confidence score.
-
-## Results
-
-The frontend and backend were successfully integrated into a complete verification workflow.
-
-The system successfully:
-
-* Accepted image uploads through the web interface.
-* Collected threshold values from users.
-* Communicated with the FastAPI backend.
-* Displayed privacy-preserving verification results.
-* Presented confidence information in a user-friendly format.
-
-## Conclusion
-
-Day 5 development successfully established the end-to-end interaction between the Streamlit frontend and FastAPI backend. Users can now perform age verification through a graphical interface while maintaining the project's privacy-preserving design principle of providing verification outcomes rather than exposing sensitive age information directly.
+We integrated the DeepFace age estimation model directly, using
+`DeepFace.analyze(actions=["age"])` on the uploaded image. DeepFace handles its own
+internal face detection and preprocessing before running age estimation — we did
+not build a separate face-detection or image-preprocessing pipeline ourselves.
+
+We implemented the threshold comparison logic in `check_threshold()`, which takes
+the predicted age and the user-supplied threshold and returns a decision
+(PASS/FAIL/INCONCLUSIVE), a boolean `is_above_threshold` flag, and a confidence
+score based on how close the prediction is to the threshold. We validated the full
+`/check_age` endpoint through Swagger UI to confirm upload, prediction, comparison,
+and response all worked correctly — and that the response never exposed the raw
+predicted age, satisfying the core privacy requirement.
+
+We then built a Streamlit frontend so the system could be used as a real demo
+rather than just an API. The interface supports image upload, an image preview,
+threshold selection, and a clear PASS/FAIL/INCONCLUSIVE result display,
+communicating with the FastAPI backend over HTTP. We added the passkey-protected
+admin flow and activity logging on top of this working core.
+
+
+- **Model:** DeepFace age estimation (`DeepFace.analyze(actions=["age"])`)
+
+- **Face detection:** handled internally by DeepFace (no separate OpenCV step)
+
+- **Decision logic:** PASS if predicted age ≥ threshold, FAIL if below, and
+  INCONCLUSIVE if the difference is within 2 years of the threshold
+
+- **Access control:** `admin.py` verifies the passkey against `.env` before
+  granting access to diagnostics; invalid passkeys are denied without affecting
+  the normal `/check_age` flow
+
+### 3. Decision Logic: PASS / FAIL / INCONCLUSIVE
+
+The `check_threshold()` function compares the predicted age against the
+user-selected threshold and returns one of three decisions:
+
+- **PASS** — predicted age is greater than or equal to the threshold, and the
+  difference is more than 2 years (e.g. predicted age 25, threshold 21 → PASS)
+- **FAIL** — predicted age is below the threshold, and the difference is more
+  than 2 years (e.g. predicted age 15, threshold 18 → FAIL)
+- **INCONCLUSIVE** — the predicted age is within 2 years of the threshold in
+  either direction (e.g. predicted age 19 or 20 at an 18+ threshold → INCONCLUSIVE)
+
+This margin exists because age estimation models are not perfectly precise, and
+treating anything within a close range of the threshold as a hard PASS or FAIL
+risks confidently returning the wrong decision. Returning INCONCLUSIVE instead
+signals that the system isn't confident enough to make a binary call for that
+borderline case.
+
+Alongside the decision, the function returns:
+- `is_above_threshold` — a boolean (`true`/`false`) indicating whether the
+  predicted age met or exceeded the threshold
+- `confidence` — a score reflecting how far the predicted age was from the
+  threshold; predictions far from the threshold (in either direction) return
+  higher confidence, while predictions close to the threshold return lower
+  confidence, reinforcing why those cases are flagged INCONCLUSIVE
+
+
+### 4. Test Results
+
+We tested on 20 images with approximate known ages across thresholds 18, 21, and 60.
+
+| Threshold | Correct Decisions | Inconclusive | Mean Absolute Error  |
+|-----------|-------------------|--------------|----------------------|
+| 18+       | 20/20              | 0            | 10.05 years         |
+| 21+       | 18/20              | 2            | 10.05 years         |
+| 60+       | 17/20              | 0            | 10.05 years         |
+
+Average confidence: ~95% at 18+, ~88% at 21+, ~100% at 60+.
+
+*(MAE reflects overall age-prediction accuracy and stays the same across all three
+rows, since it measures how far predicted age was from actual age, independent of
+which threshold is being checked.)*
+
+**Notable finding:** predicted ages showed a strong tendency to cluster in a
+narrow lower range regardless of the input image, alongside a broader pattern of
+underestimation for older adults. All 3 incorrect decisions occurred at the 60+
+threshold — individuals with actual ages 61, 65, and 69 were all predicted under
+60 and incorrectly returned FAIL. This shows the underestimation issue isn't just
+a raw-accuracy concern; it can directly flip real decisions near a threshold
+boundary.
+
+### 5. Privacy & Access Design Rationale
+
+Two principles guided the design:
+
+1. **Data minimization** — the public endpoint never returns estimated age, only
+   a threshold-relative decision and confidence, consistent with how real-world
+   age-gating systems only need "above/below a line."
+2. **Role separation** — diagnostic data (raw age, confidence breakdown) is gated
+   behind an authenticated admin route so normal users' privacy guarantee stays
+   intact while we retain visibility for model evaluation.
+
+### 6. Known Limitations
+
+- During testing, we observed that predicted ages clustered consistently in a
+  narrow range regardless of the input image, alongside underestimation that was
+  especially pronounced for older adults. Investigating this, we traced a likely
+  cause to how we call DeepFace: our `predict_age()` function uses
+  `enforce_detection=False`, which allows inference to proceed even when a face
+  isn't cleanly detected. This means the model may be running on a poorly
+  isolated face region — or a fallback — rather than a properly detected face on
+  every call, which would explain the clustering behavior we observed.
+- This is a valuable finding in itself: `enforce_detection=False` is convenient
+  for avoiding crashes on bad inputs, but it can silently degrade prediction
+  quality rather than failing loudly — a tradeoff worth being explicit about when
+  using DeepFace. The fix would be to set `enforce_detection=True` and add
+  explicit face-count validation at the API level, rejecting images with zero or
+  multiple detected faces before running age estimation.
+- Due to project time constraints, we were not able to re-run the full 20-image
+  test set with `enforce_detection=True` to fully confirm this fix, but we flag
+  it as the most likely root cause and the first change we would make going
+  forward.
+- The passkey check is a simple shared-secret comparison — fine for a local
+  learning demo, but not production-grade (no hashing, sessions, rate limiting).
+- Evaluated on a modest sample (20 images), not large enough for firm
+  conclusions about bias across broader demographics, even after the above fix.
+
+### 7. Edge Cases Handled
+
+- **Threshold near predicted age** → returns INCONCLUSIVE instead of a
+  potentially wrong PASS/FAIL
+- **Invalid admin passkey** → returns HTTP 401, access denied, no diagnostic
+  data leaked
+- **Temporary file cleanup** → uploaded images are written to a temp file for
+  processing and deleted immediately after, regardless of success or failure
+  (via `finally`), so no uploaded image persists on disk
+
+**Not currently handled:** no-face and multiple-face detection are not
+explicitly validated in our implementation — since `enforce_detection=False` is
+used, DeepFace does not raise an error for these cases and instead proceeds
+with whatever it can infer. This is directly related to the age-clustering
+issue discussed in Known Limitations, and explicit face-count validation
+(rejecting images with zero or multiple faces before calling `estimate_age()`)
+is one of our identified next improvements.
+
+### 8. Next Improvements
+
+- Set `enforce_detection=True` in `predict_age()` and re-run the full test set to
+  confirm whether this resolves the age-clustering and underestimation issue
+- Compare DeepFace against InsightFace's age module for accuracy
+- Widen the inconclusive margin for higher thresholds (e.g. 60+), given the
+  larger observed error in that range
+- Test for bias across lighting conditions and age groups with a larger sample
+- Build the activity log dashboard in Streamlit
+- Add rate limiting on repeated failed passkey attempts
+
+---
+
+*This project was developed as part of the ByoSync Internship Program for
+educational purposes. It is not intended for production deployment and does
+not claim compliance with commercial privacy, biometric, or regulatory
+standards.*
