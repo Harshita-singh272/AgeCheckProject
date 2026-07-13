@@ -116,7 +116,7 @@ Two principles guided the design:
 2. **Role separation** — diagnostic data (raw age, confidence breakdown) is gated
    behind an authenticated admin route so normal users' privacy guarantee stays
    intact while we retain visibility for model evaluation.
-
+   
 ### 6. Known Limitations
 
 - During testing, we observed that predicted ages clustered consistently in a
@@ -141,6 +141,11 @@ Two principles guided the design:
   learning demo, but not production-grade (no hashing, sessions, rate limiting).
 - Evaluated on a modest sample (20 images), not large enough for firm
   conclusions about bias across broader demographics, even after the above fix.
+- Our activity log stores the raw predicted age for every request. We've
+  removed this file from our GitHub repository and added it to .gitignore to
+  prevent it from being publicly exposed going forward. A production version
+  would still need to exclude predicted_age from public-flow log entries
+  entirely, or add proper access controls to the log itself.
 
 ### 7. Edge Cases Handled
 
