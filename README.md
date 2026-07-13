@@ -61,7 +61,7 @@ AgeCheckProject/
 ├── data/
 │   └── test_images/
 |
-├── assts/
+├── assets/
 |    └── Screenshots of ui/
 ├── tests/
 │
@@ -78,7 +78,7 @@ AgeCheckProject/
 ### Clone the repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/Harshita-singh272/AgeCheckProject
 cd AgeCheckProject
 ```
 
@@ -268,7 +268,29 @@ pip install -r requirements.txt
 ```
 
 ---
+## 🔑 Admin Panel Access
 
+The project includes an administrator panel that provides additional diagnostic information such as the estimated age, confidence score, model details, verification history, and analytics. This functionality is intended for evaluation and learning purposes only.
+
+The actual `.env` file is not included in this repository.
+
+### Demo Passkey
+
+For evaluation, use the following administrator passkey:
+
+```text
+admin123
+```
+
+Create a `.env` file in the project root with:
+
+```env
+ADMIN_PASSKEY=admin123
+```
+
+You may replace `admin123` with any custom passkey if you wish.
+
+---
 ## Future Improvements
 
 - User authentication
