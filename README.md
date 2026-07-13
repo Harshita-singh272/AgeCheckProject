@@ -13,15 +13,19 @@ A web-based Age Verification System developed using **FastAPI**, **Streamlit**, 
 
 ## Features
 
-- Upload an image for age verification.
-- AI-based age estimation using DeepFace.
-- Customizable age threshold.
-- PASS / FAIL / INCONCLUSIVE decision.
-- Confidence score display.
-- Verification activity logging.
-- Modern Streamlit user interface.
-- FastAPI backend for prediction.
-
+- Upload an image for age verification
+- AI-based age estimation using DeepFace
+- Configurable age thresholds (18+, 21+, 25+, 50+, 60+)
+- Boolean PASS / FAIL / INCONCLUSIVE verification
+- Confidence score visualization
+- Separate User and Admin interfaces
+- Admin authentication using passkey
+- Detailed administrator diagnostics
+- Verification activity logging
+- Verification statistics dashboard
+- Threshold-wise analytics using Plotly
+- FastAPI REST API backend
+- Streamlit-based interactive frontend
 ---
 
 ## Tech Stack
@@ -62,6 +66,7 @@ AgeCheckProject/
 ├── app_ui.py
 ├── requirements.txt
 ├── README.md
+├──structure.txt
 └── report.md
 ```
 
@@ -126,17 +131,112 @@ The Streamlit application opens automatically in your browser.
 
 ---
 
-## API Endpoint
+## API Endpoints
+
+### GET `/`
+
+Returns a welcome message indicating that the API is running.
+
+**Response**
+
+```json
+{
+  "message": "Age Check API Running"
+}
+```
+
+---
+
+### GET `/health`
+
+Checks whether the API is healthy.
+
+**Response**
+
+```json
+{
+  "status": "ok"
+}
+```
+
+---
+
+### GET `/version`
+
+Returns the current API version.
+
+**Response**
+
+```json
+{
+  "module": "age_check",
+  "version": "0.1.0"
+}
+```
+
+---
 
 ### POST `/check_age`
 
-Uploads an image and returns:
+Performs age verification for a normal user.
+
+**Request**
+
+- Image (multipart/form-data)
+- Threshold (form field)
+
+**Response**
+
+- Decision (PASS / FAIL / INCONCLUSIVE)
+- Threshold
+- Confidence Score
+
+---
+
+### POST `/admin/login`
+
+Authenticates an administrator.
+
+**Request**
+
+```json
+{
+  "passkey": "your_admin_passkey"
+}
+```
+
+**Response**
+
+```json
+{
+  "authenticated": true,
+  "message": "Admin access granted"
+}
+```
+
+---
+
+### POST `/admin/check_age`
+
+Performs administrator verification.
+
+**Request**
+
+- Admin passkey
+- Image
+- Threshold
+
+**Response**
+
+Returns additional diagnostic information:
 
 - Estimated Age
 - Threshold
-- Verification Decision
-- Confidence Score
-
+- Difference from Threshold
+- Decision
+- Confidence
+- Latency
+- Model Name
 ---
 
 ## Verification Decisions
