@@ -61,6 +61,8 @@ AgeCheckProject/
 ├── data/
 │   └── test_images/
 |
+├── assts/
+|    └── Screenshots of ui/
 ├── tests/
 │
 ├── app_ui.py
