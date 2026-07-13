@@ -62,33 +62,6 @@ def get_statistics():
 
     return stats
 
-def get_heatmap_data():
-    """
-    Groups verification results by threshold.
-    """
-
-    logs = load_verification_logs()
-
-    heatmap = {}
-
-    for log in logs:
-
-        threshold = str(log.get("threshold"))
-
-        decision = log.get("decision", "").upper()
-
-        if threshold not in heatmap:
-            heatmap[threshold] = {
-                "PASS": 0,
-                "FAIL": 0,
-                "INCONCLUSIVE": 0
-            }
-
-        if decision in heatmap[threshold]:
-            heatmap[threshold][decision] += 1
-
-    return heatmap
-
 def get_bargraph_dataframe():
     """
     Creates a DataFrame showing number of verifications
@@ -117,10 +90,3 @@ def get_bargraph_dataframe():
     )
     return bar_df
 
-if __name__ == "__main__":
-
-    print("\nStatistics:")
-    print(get_statistics())
-
-    print("\nHeatmap Data:")
-    print(get_heatmap_data())
