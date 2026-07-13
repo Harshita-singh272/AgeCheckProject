@@ -56,8 +56,7 @@ AgeCheckProject/
 │
 ├── data/
 │   └── test_images/
-│
-├── demo/
+|
 ├── tests/
 │
 ├── app_ui.py
